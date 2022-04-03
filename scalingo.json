@@ -1,5 +1,5 @@
 {
-  "name": "Sample Node Express",
+  "name": "Node Express Mongo Celery",
   "description": "Sample web application using the Node.JS 'express' framework",
   "logo": "https://raw.githubusercontent.com/Scalingo/sample-node-express/master/logo.png",
   "repository": "https://github.com/Scalingo/sample-node-express",
