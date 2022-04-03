@@ -5,6 +5,16 @@
 var express = require('express')
 var app = express()
 
+var MongoClient = require('mongodb').MongoClient;
+var url = SCALINGO_MONGO_URL
+
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  console.log("Database made!")
+  console.log(db.name)
+  db.close()
+})
+
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'jade');
 
