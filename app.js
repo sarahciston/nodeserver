@@ -2,11 +2,58 @@ require('dotenv').config()
 
 var express = require('express')
 var app = express()
+let fs = require('fs')
+
+// let DB_URL = process.env.SCALINGO_MONGO_URL
+let DB_URL = process.env.SCALINGO_ELASTICSEARCH_URL
+let DB_USER = process.env.DB_USER
+let DB_PW = process.env.DB_PW
+
+const { Client } = require ('@elastic/elasticsearch')
+const client = new Client({
+  node: DB_URL,
+  auth: { username: DB_USER,
+          password: DB_PW
+        },
+  tls: {
+    ca: fs.readFileSync('elastic/ca.pem'),
+    rejectUnauthorized: false
+  }
+})
+
+async function elastic(){
+  await client.index({
+    index: 'kind-phrases',
+    document: {
+      text: 'you are amazing',
+    }
+  })
+
+  await client.index({
+    index: 'kind-phrases',
+    document: {
+      text: 'keep your chin up',
+    }
+  })
+
+  await client.indices.refresh({ index: 'kind-phrases' })
+
+  let result = await client.search({
+    index: 'kind-phrases',
+    query: {
+      match: { text: 'keep' }
+    }
+  })
+  console.log(result.hits.hits)
+}
+elastic().catch(console.log)
+
+
+/*
 
 let { MongoClient } = require('mongodb')
 
-let url = process.env.SCALINGO_MONGO_URL
-let client = new MongoClient(url)
+let client = new MongoClient(DB_URL)
 let DBNAME = 'ivo'
 let TABLE = 'phrases'
 
@@ -49,7 +96,7 @@ client.connect().then(() => {
 
 // .then((docs) => { docs.forEach((doc, id, array) => { console.log(doc.name) })
 
-
+*/
 
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'jade');
