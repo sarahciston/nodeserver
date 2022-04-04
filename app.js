@@ -14,11 +14,12 @@ const client = new Client({
   node: DB_URL,
   auth: { username: DB_USER,
           password: DB_PW
-        },
-  tls: {
-    ca: fs.readFileSync('elastic/ca.pem'),
-    rejectUnauthorized: false
-  }
+        }
+  //       ,
+  // tls: {
+  //   ca: fs.readFileSync('elastic/ca.pem'),
+  //   rejectUnauthorized: false
+  // }
 })
 
 async function elastic(){
