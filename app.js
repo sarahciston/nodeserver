@@ -12,14 +12,14 @@ const client = new MongoClient(uri, { useNewUrlParser: true })
 client.connect().then((err, client) => {
   console.log("reached connect")
 
-  client.command({ ping: 1 })
+  const collection = client.db('ivo').collection('phrases')
+  // client.command({ ping: 1 })
   console.log("Database pinged successfully!")
 
   client.close()
 
   }).catch((err) => { console.log(err) })
 
-  // const collection = client.db('ivo').createCollection('phrases')
 
   // .then((db) => { db.createCollection("phrases") })
     
