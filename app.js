@@ -4,6 +4,10 @@ var express = require('express')
 var app = express()
 let fs = require('fs')
 
+
+// DATABASE
+
+
 let DB_URL = process.env.SCALINGO_MONGO_URL
 
 let { MongoClient } = require('mongodb')
@@ -12,28 +16,26 @@ let client = new MongoClient(DB_URL)
 let DBNAME = 'ivo'
 let TABLE = 'phrases'
 
-client.connect().then(() => {
-  console.log("reached connect")
+client.connect()
+  .then(() => {
+    console.log("reached connect")
 
-  let db = client.db(DBNAME)
-  let collection = db.collection(TABLE)
-  console.log("reached collection: ", collection.collectionName, db.databaseName)
+    let db = client.db(DBNAME)
+    let collection = db.collection(TABLE)
+    console.log("reached collection: ", collection.collectionName, db.databaseName)
 
-  // collection.find({}).toArray().then((res) => { console.log(res) })
-  // console.log("found above")
+    // collection.find({}).toArray().then((res) => { console.log(res) })
+    // console.log("found above")
 
-  // }).then(() => {
-    // client.close()
-    // console.log("closed db")
+    db.listCollections().toArray().then((res) => {
+      console.log("a list of tables: ", res)
+    }).catch(console.error)
+
+    // .then((docs) => { docs.forEach((doc, id, array) => { console.log(doc.name) })
+  
   }).catch(console.error)
 
-
-  // .then((db) => { db.createCollection("phrases") })
-    
-  // .then((db) => { db.listCollections().toArray() })
-
-// .then((docs) => { docs.forEach((doc, id, array) => { console.log(doc.name) })
-
+// ROUTING
 
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'jade');
