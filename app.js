@@ -6,12 +6,16 @@ var express = require('express')
 var app = express()
 
 var MongoClient = require('mongodb').MongoClient;
-var url = SCALINGO_MONGO_URL
+var url = "MONGO_URL"
 
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
+  var base = db.db("ivo")
   console.log("Database made!")
-  console.log(db.name)
+  base.createCollection("phrases", function(err, res) {
+    if (err) throw err;
+    console.log("collection created");
+  })
   db.close()
 })
 
