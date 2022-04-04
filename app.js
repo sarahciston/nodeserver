@@ -3,21 +3,27 @@ require('dotenv').config()
 var express = require('express')
 var app = express()
 
-console.log(process.env)
+const { MongoClient } = require('mongodb')
+let uri = process.env.SCALINGO_MONGO_URL
+console.log(uri)
 
-var MongoClient = require('mongodb').MongoClient;
-var url = "MONGO_URL"
+const client = new MongoClient(uri)
 
-MongoClient.connect(url, function(err, db) {
-  if (err) throw err;
-  var base = db.db("ivo")
-  console.log("Database made!")
-  base.createCollection("phrases", function(err, res) {
-    if (err) throw err;
-    console.log("collection created");
-  })
-  db.close()
-})
+client.connect().then((err, cl) => {
+    console.log("reached connect")
+    let db = cl.db("ivo")
+    db.command({ ping: 1 })
+    console.log("Database pinged successfully!")})
+
+  .then((db) => { db.createCollection("phrases") })
+    
+  .then((db) => { db.listCollections().toArray() })
+
+// .then((docs) => { docs.forEach((doc, id, array) => { console.log(doc.name) })
+
+  .catch((err) => { console.log(err) })  
+  .finally(() => {  client.close() })
+
 
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'jade');
