@@ -22,6 +22,8 @@ const client = new Client({
 })
 
 async function elastic(){
+  console.log("reached elastic")
+
   await client.index({
     index: 'kind-phrases',
     document: {
@@ -36,6 +38,8 @@ async function elastic(){
     }
   })
 
+  console.log("indexed")
+
   await client.indices.refresh({ index: 'kind-phrases' })
 
   let result = await client.search({
@@ -46,7 +50,7 @@ async function elastic(){
   })
   console.log(result.hits.hits)
 }
-elastic().catch(console.log)
+elastic().catch(console.error)
 
 
 /*
