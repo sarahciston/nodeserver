@@ -1,9 +1,9 @@
-/**
- * @author Léo Unbekandt
- */
+require('dotenv').config()
 
 var express = require('express')
 var app = express()
+
+console.log(process.env)
 
 var MongoClient = require('mongodb').MongoClient;
 var url = "MONGO_URL"
