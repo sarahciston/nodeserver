@@ -7,22 +7,26 @@ const { MongoClient } = require('mongodb')
 let uri = process.env.SCALINGO_MONGO_URL
 console.log(uri)
 
-const client = new MongoClient(uri)
+const client = new MongoClient(uri, { useNewUrlParser: true })
 
-client.connect().then((err, cl) => {
-    console.log("reached connect")
-    let db = cl.db("ivo")
-    db.command({ ping: 1 })
-    console.log("Database pinged successfully!")})
+client.connect().then((err, client) => {
+  console.log("reached connect")
 
-  .then((db) => { db.createCollection("phrases") })
+  client.command({ ping: 1 })
+  console.log("Database pinged successfully!")
+
+  client.close()
+
+  }).catch((err) => { console.log(err) })
+
+  // const collection = client.db('ivo').createCollection('phrases')
+
+  // .then((db) => { db.createCollection("phrases") })
     
-  .then((db) => { db.listCollections().toArray() })
+  // .then((db) => { db.listCollections().toArray() })
 
 // .then((docs) => { docs.forEach((doc, id, array) => { console.log(doc.name) })
 
-  .catch((err) => { console.log(err) })  
-  .finally(() => {  client.close() })
 
 
 app.use(express.static(__dirname + '/public'));
