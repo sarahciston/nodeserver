@@ -3,22 +3,44 @@ require('dotenv').config()
 var express = require('express')
 var app = express()
 
-const { MongoClient } = require('mongodb')
-let uri = process.env.SCALINGO_MONGO_URL
-console.log(uri)
+let { MongoClient } = require('mongodb')
 
-const client = new MongoClient(uri, { useNewUrlParser: true })
+let url = process.env.SCALINGO_MONGO_URL
+let client = new MongoClient(url)
+let DBNAME = 'ivo'
+let TABLE = 'phrases'
 
-client.connect().then((err, client) => {
+// async function database(){
+
+//   await client.connect((err) => {
+//     console.log("reached connect")
+    
+//     let db = client.db(DBNAME)
+//     let collection = db.collection(TABLE)
+//     console.log("reached collection: ", collection.collectionName, db.databaseName)
+
+//     let findResult = await collection.find({}).toArray()
+//     console.log('Found documents... ', findResult)
+
+//     client.close()
+//   })
+// }
+// database().catch(console.error)
+
+client.connect().then(() => {
   console.log("reached connect")
 
-  const collection = client.db('ivo').collection('phrases')
-  // client.command({ ping: 1 })
-  console.log("Database pinged successfully!")
+  let db = client.db(DBNAME)
+  let collection = db.collection(TABLE)
+  console.log("reached collection: ", collection.collectionName, db.databaseName)
 
-  client.close()
+  // collection.find({}).toArray().then((res) => { console.log(res) })
+  // console.log("found above")
 
-  }).catch((err) => { console.log(err) })
+  // }).then(() => {
+    // client.close()
+    // console.log("closed db")
+  }).catch(console.error)
 
 
   // .then((db) => { db.createCollection("phrases") })
